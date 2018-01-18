@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object class="ttk.Frame" id="main_frame">
+    <property name="height">145</property>
+    <property name="padding">5</property>
+    <property name="width">410</property>
+    <layout>
+      <property name="column">0</property>
+      <property name="ipadx">2</property>
+      <property name="ipady">2</property>
+      <property name="propagate">False</property>
+      <property name="row">0</property>
+      <property name="sticky">nsew</property>
+      <columns>
+        <column id="0">
+          <property name="minsize">6</property>
+        </column>
+      </columns>
+      <rows>
+        <row id="0">
+          <property name="minsize">4</property>
+        </row>
+      </rows>
+    </layout>
+    <child>
+      <object class="ttk.Frame" id="Frame_tab_mall">
+        <property name="height">40</property>
+        <property name="padding">0</property>
+        <property name="width">50</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <columns>
+            <column id="0">
+              <property name="minsize">0</property>
+            </column>
+          </columns>
+          <rows>
+            <row id="0">
+              <property name="minsize">0</property>
+            </row>
+          </rows>
+        </layout>
+        <child>
+          <object class="ttk.Label" id="Label_lugem_pikkus">
+            <property name="text" translatable="yes">Pikkus</property>
+            <property name="textvariable">string:pikkus</property>
+            <property name="width">15</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="columnspan">1</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="Label_lugem_kiirus">
+            <property name="text" translatable="yes">Kiirus</property>
+            <property name="textvariable">string:kiirus</property>
+            <property name="width">15</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="columnspan">1</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Button_Start_Stop">
+            <property name="command">clicked_on_start_stop</property>
+            <property name="text" translatable="yes">Start</property>
+            <property name="textvariable">string:StartStop</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Entry" id="Entry_keskmistamine">
+            <property name="textvariable">string:keskmistamine</property>
+            <property name="width">6</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="propagate">False</property>
+              <property name="row">1</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Entry" id="Entry_stdev">
+            <property name="text" translatable="yes">Entry_1</property>
+            <property name="textvariable">string:kiirus_stdev</property>
+            <property name="width">11</property>
+            <layout>
+              <property name="column">3</property>
+              <property name="columnspan">1</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Button_Hold">
+            <property name="command">clickedOnHold</property>
+            <property name="text" translatable="yes">Hold</property>
+            <layout>
+              <property name="column">4</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Combobox" id="combobox_seerial_pordid">
+            <property name="textvariable">string:valitud_seerial_port</property>
+            <property name="validatecommand">ava_seerial</property>
+            <property name="width">10</property>
+            <bind add="True" handler="ava_seerial" sequence="&lt;&lt;ComboboxSelected&gt;&gt;" />
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">w</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="button_leia_seerial_pordid">
+            <property name="command">clicked_on_leia_seerial_pordid</property>
+            <property name="text" translatable="yes">Leia COM pordid</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="columnspan">2</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="label_QR_seerial">
+            <property name="text" translatable="yes">Pordid</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Button_yhenda">
+            <property name="command">ava_seerial</property>
+            <property name="text" translatable="yes">Ühenda</property>
+            <property name="textvariable">string:yhenduseText</property>
+            <layout>
+              <property name="column">4</property>
+              <property name="columnspan">1</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Label" id="Label_freq">
+            <property name="text" translatable="yes">Sagedus</property>
+            <property name="textvariable">string:sagedus</property>
+            <property name="width">14</property>
+            <layout>
+              <property name="column">4</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Label" id="Label_2">
+            <property name="text" translatable="yes">v[m/min]</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Label" id="Label_3">
+            <property name="text" translatable="yes">L[m]</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Label" id="Label_4">
+            <property name="text" translatable="yes">f[kHz]</property>
+            <layout>
+              <property name="column">3</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Checkbutton" id="checkButtonOutput">
+            <property name="text" translatable="yes">Väljund?</property>
+            <property name="variable">boolean:checkButtonOutput</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">4</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Combobox" id="Combobox_output">
+            <property name="textvariable">string:valitud_output_parameter</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="columnspan">2</property>
+              <property name="propagate">True</property>
+              <property name="row">4</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="Label_1">
+            <property name="relief">sunken</property>
+            <property name="text" translatable="yes">Label_1</property>
+            <property name="textvariable">string:status_text</property>
+            <property name="width">65</property>
+            <property name="wraplength">10000</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="columnspan">5</property>
+              <property name="ipadx">0</property>
+              <property name="ipady">0</property>
+              <property name="propagate">True</property>
+              <property name="row">3</property>
+              <property name="rowspan">1</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
