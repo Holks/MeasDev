@@ -33,14 +33,13 @@ class SerialThread(threading.Thread):
         self.data=None
         self.queue = queue
         
-    def ava_seerial(self, port):
+    def ava_seerial(self, port="COM1", baudrate=9600, bytesize=8, parity='N', stopbits=1):
         try:
-            print( "Yhendan " + str(port[0]) )
-            self.ser = serial.Serial(port[0], port[1],bytesize=8, parity='N', stopbits=1,
-                   timeout=1)
+            print( "Yhendan " + port )
+            self.ser = serial.Serial(port, baudrate, bytesize, parity, stopbits,timeout=1)
             self.sio = io.TextIOWrapper(io.BufferedReader(self.ser, 1))#,write_through=False)#, newline="\x03")
             #self.sio._CHUNK_SIZE = 1
-            print(str(port[0]) + " yhendatud")
+            print(str(port) + " yhendatud")
             return False
         
         except SerialException:

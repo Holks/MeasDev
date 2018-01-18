@@ -27,12 +27,10 @@ class SerialThreadTT20(threading.Thread):
         self.data=None
         self.queue = queue
         
-    def ava_seerial(self, port):
+    def ava_seerial(self, port="COM1", baudrate=9600, bytesize=8, parity='N', stopbits=1):
         try:
             try:
-                self.ser = serial.Serial(port=port[0], baudrate=4800,
-                                      bytesize=7, parity='E', stopbits=2,
-                                      timeout=0.2, xonxoff=0, rtscts=0)
+                self.ser = serial.Serial(port, baudrate, bytesize, parity, stopbits, timeout=1, xonxoff=0, rtscts=0)
             except  serial.SerialException as ex:
                 print('Port {0} is unavailable: {1}'.format(port, ex))
                 return True # tagasi veateatega
@@ -43,7 +41,7 @@ class SerialThreadTT20(threading.Thread):
             self.ser.flush()
             self.sio = io.TextIOWrapper(io.BufferedReader(self.ser, 1))#,write_through=False)#, newline="\x03")
             #self.sio._CHUNK_SIZE = 1
-            print(str(port[0]) + " yhendatud")
+            print(port + " yhendatud")
             return False
         
         except SerialException:
@@ -79,7 +77,7 @@ class SerialThreadTT20(threading.Thread):
                     text = self.sio.readline() # loe sisse rida
                     print(text)
                     self.sio.flush()
-                    if text != -1: #and text.find('\x03') == -1: # kui ei ole tyhi ja ei sisalda ETX eritähemärki
+                    if text != -1 and text.find("ERR") == -1: #and text.find('\x03') == -1: # kui ei ole tyhi ja ei sisalda ETX eritähemärki
                         self.queue.put(text) # pane järjekorda
                     else:
                         pass

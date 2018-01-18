@@ -56,41 +56,6 @@
           </object>
         </child>
         <child>
-          <object class="ttk.Combobox" id="combobox_seerial_pordid">
-            <property name="textvariable">string:valitud_seerial_port</property>
-            <property name="width">10</property>
-            <layout>
-              <property name="column">1</property>
-              <property name="propagate">True</property>
-              <property name="row">0</property>
-              <property name="sticky">ew</property>
-            </layout>
-          </object>
-        </child>
-        <child>
-          <object class="ttk.Button" id="button_leia_seerial_pordid">
-            <property name="command">clicked_on_leia_seerial_pordid</property>
-            <property name="text" translatable="yes">Leia COM pordid</property>
-            <layout>
-              <property name="column">2</property>
-              <property name="columnspan">3</property>
-              <property name="propagate">True</property>
-              <property name="row">0</property>
-              <property name="sticky">ew</property>
-            </layout>
-          </object>
-        </child>
-        <child>
-          <object class="ttk.Label" id="label_QR_seerial">
-            <property name="text" translatable="yes">Pordid</property>
-            <layout>
-              <property name="column">0</property>
-              <property name="propagate">True</property>
-              <property name="row">0</property>
-            </layout>
-          </object>
-        </child>
-        <child>
           <object class="ttk.Button" id="Button_yhenda_temp">
             <property name="command">ava_seerial_temp</property>
             <property name="text" translatable="yes">Ühenda temp. </property>
@@ -156,6 +121,30 @@
               <property name="column">1</property>
               <property name="propagate">True</property>
               <property name="row">1</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Entry" id="Entry_temp">
+            <property name="text" translatable="yes">COM1;9600;8;N;1</property>
+            <property name="textvariable">string:tempSerial</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">ew</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Entry" id="Entry_sensor">
+            <property name="text" translatable="yes">COM4;4800;7;E;2</property>
+            <property name="textvariable">string:devSerial</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
               <property name="sticky">ew</property>
             </layout>
           </object>

@@ -11,17 +11,16 @@ from tkinter import messagebox
 import time
 import queue
 from datetime import datetime
+import win32com.client
 import re
 from seerial import SerialThread
 from seerialTT20 import SerialThreadTT20
 from seerial import otsi_seerial   # @UnresolvedImport
-import win32com.client
+
 import winsound
 from pygubu.builder import ttkstdwidgets
 
 shell = win32com.client.Dispatch("WScript.Shell")
-
-
 class switch(object):
     def __init__(self, value):
         self.value = value
@@ -60,13 +59,13 @@ class Smartsensor:
         self.kiirus= builder.get_variable("almemoOutput")
 
         self.seadmeseerial = serial.Serial()
-        self.valitud_seerial_port = builder.get_variable("valitud_seerial_port")
         
         # 5: impordi pygubu's defineeritud objektid
-        self.combobox_seerial_pordid = builder.get_object("combobox_seerial_pordid", master)
         self.yhenduseTextTemp = builder.get_variable("yhenduseTextTemp")
         self.yhenduseTextSensor = builder.get_variable("yhenduseTextSensor")
         self.keskmistamine = builder.get_variable("keskmistamine")
+        self.tempSerial = builder.get_variable("tempSerial")
+        self.devSerial = builder.get_variable("devSerial")
         self.statusText = builder.get_variable("status_text")
         #self.enableOutput = False
         
@@ -80,7 +79,8 @@ class Smartsensor:
         self.thread = SerialThread(self.queue)
         self.thread.daemon = True
         
-        self.queue2 = queue.Queue()   
+        self.queue2 = queue.Queue()  
+        #self.thread2 = SerialThread(self.queue2) 
         self.thread2 = SerialThreadTT20(self.queue2)
         self.thread2.daemon = True
         self.keylogger = threading.Thread()
@@ -106,16 +106,8 @@ class Smartsensor:
                 self.thread.write_serial("S1") # kysi kõiki andmeid
             elif k=='f8':
                 self.thread2.write_serial('?') # kysi kõiki andmeid
-           # winsound.MessageBeep()  
-              
+            winsound.MessageBeep()
         
-    def clicked_on_leia_seerial_pordid(self, event=None):
-        result = otsi_seerial()
-        if result:
-            self.combobox_seerial_pordid['values']=result
-        else:
-            tk.messagebox.showinfo("Viga", "Ei leidnud ühtegi vaba COM ühendust!\nKontrolli ühendusi!")
-
         
     def process_serial(self):
         self.process_serial_called= True
@@ -154,9 +146,12 @@ class Smartsensor:
                 outData ="" 
                 outData = kirje.replace('.',',')+'\t'  # v2ljundkirje koostamine ja eraldamine tabulatsiooniga
                 shell.SendKeys(outData) # saadab sobiva anduri tulemused
+                shell.SendKeys("\r")
                 print("TT20 lugem" + outData)
+                winsound.MessageBeep()
             except queue.Empty:
                 pass
+            
         self.window.after(10, self.process_serial)  
         
     def return_key_pressed_seerial_port(self, event=None):   
@@ -172,16 +167,36 @@ class Smartsensor:
                 self.thread.stop()
             else:
                 if event==None:
-                    if not self.thread.ava_seerial(['COM19','9600']): # ava seerialyhendus
-                        self.yhenduseTextTemp.set("Katkesta temp.")
-                        self.thread.start() # käivitab seeriali lõime
-                        if self.process_serial_called:
-                            self.process_serial()
-                            print("Käivitan process serial lõime")
-                        self.clicked_on_leia_seerial_pordid()
-                elif  self.valitud_seerial_port.get():
-                    self.thread.ava_seerial([self.valitud_seerial_port.get(),'9600'])
-                    self.yhenduseTextTemp.set("Katkesta temp.")
+                    try:
+                        try:
+                            port = self.tempSerial.get().split(";")[0]
+                        except:
+                            port = "COM1"
+                        try:
+                            baudrate = self.tempSerial.get().split(";")[1]
+                        except:
+                            baudrate = 9600
+                        try:
+                            parity = self.tempSerial.get().split(";")[3]
+                        except:
+                            parity="N"
+                        try:                        
+                            bytesize = self.tempSerial.get().split(";")[2]
+                        except:
+                            bytesize =1
+                        try:
+                            stopbits = int(self.tempSerial.get().split(";")[4])
+                        except:
+                            stopbits = 1
+                        print(port, baudrate, parity, bytesize, stopbits)
+                        if not self.thread.ava_seerial(port, baudrate, parity, bytesize, stopbits): 
+                            self.yhenduseTextTemp.set("Katkesta temp.")
+                            self.thread.start() # käivitab seeriali lõime
+                            if self.process_serial_called:
+                                self.process_serial()
+                                print("Käivitan process serial lõime")
+                    except Exception as e:
+                        messagebox.showinfo("Title", "a Tk MessageBox")
                 else:
                     tk.messagebox.showinfo("Viga", "Ei õnnestunud temp. yhendamine") 
                     return
@@ -192,6 +207,7 @@ class Smartsensor:
                 self.keylogger.start()
         except:
             pass
+        
     def ava_seerial_sensor(self, event=None): 
         try:
             if self.yhenduseTextSensor.get() == "Katkesta sensor":
@@ -201,20 +217,39 @@ class Smartsensor:
                 self.thread2.stop()
             else:
                 if event==None:
-                    if not self.thread2.ava_seerial(['COM20','4800']): # ava seerialyhendus
-                        self.yhenduseTextSensor.set("Katkesta sensor")
-                        self.thread2.start() # käivitab seeriali lõime
-                        if self.process_serial_called:
-                            self.process_serial()
-                        self.clicked_on_leia_seerial_pordid()
-                elif  self.valitud_seerial_port.get():
-                    self.thread2.ava_seerial([self.valitud_seerial_port.get(),'4800'])
-                    self.yhenduseTextSensor.set("Katkesta sensor")
+                    try:
+                        print(self.devSerial.get().split(";"))
+                        try:
+                            port = self.devSerial.get().split(";")[0]
+                        except:
+                            port = "COM1"
+                        try:
+                            baud = self.devSerial.get().split(";")[1]
+                        except:
+                            baud = 9600
+                        try:
+                            par = self.devSerial.get().split(";")[3]
+                        except:
+                            par="N"
+                        try:                        
+                            size =  int(self.devSerial.get().split(";")[2])
+                        except:
+                            size =1
+                        try:
+                            stop = int(self.devSerial.get().split(";")[4])
+                        except:
+                            stop = 1
+                        print(port, baud, par, size, stop)
+                        if not self.thread2.ava_seerial(port, baud, size, par, stop): 
+                            self.yhenduseTextSensor.set("Katkesta sensor")
+                            self.thread2.start() # käivitab seeriali lõime
+                            if self.process_serial_called:
+                                self.process_serial()
+                    except Exception as e:
+                        messagebox.showinfo("Sensori yhendamise viga", e)
                 else:
                     tk.messagebox.showinfo("Viga", "Ei õnnestunud sensori yhendamine") 
-                    return
-                   
-                
+                    return                
                 self.process_serial()
             if not self.keylogger.isAlive():
                 self.keylogger = keyboard.Listener(on_release=self.on_release)
